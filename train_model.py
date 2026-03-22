@@ -73,16 +73,17 @@ def load_model(path, input_size=3, hidden_size=32, device="cpu"):
 
 if __name__ == "__main__":
 
-    data_path = "data_I200.npz"
-    model_path = "model.pt"
+    data_path = "data_big.npz"
+    model_path = "model_big.pt"
 
     X, y = load_data(data_path)
-    loader = create_dataloader(X, y, batch_size=256)
+    loader = create_dataloader(X, y, batch_size=512)
 
     model = create_model(input_size=3, hidden_size=32)
 
     pos_weight = compute_pos_weight(y)
 
+    print("train model...")
     train(
         model,
         loader,

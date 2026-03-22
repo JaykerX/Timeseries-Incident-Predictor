@@ -3,8 +3,11 @@ import torch
 import torch.nn as nn
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 
+DATA_PATH = "data_big.npz"
+MODEL_PATH = "model_big.pt"
+THRESH = 0.7
 
-data = np.load("data_I200.npz")
+data = np.load(DATA_PATH)
 
 X_test = torch.tensor(data["X_test"], dtype=torch.float32)
 y_test = data["y_test"]
@@ -20,16 +23,15 @@ class Model(nn.Module):
         return torch.sigmoid(self.fc(h[-1])).squeeze()
 
 model = Model()
-model.load_state_dict(torch.load("model.pt"))
+model.load_state_dict(torch.load(MODEL_PATH))
 model.eval()
 
-thresh = 0.7
 
 with torch.no_grad():
     preds = model(X_test).numpy()
-    preds = (preds > thresh).astype(int)
+    preds = (preds > THRESH).astype(int)
 
-print(f"Threshold: {thresh}")
+print(f"Threshold: {THRESH}")
 print("Accuracy:", accuracy_score(y_test, preds))
 print("Precision:", precision_score(y_test, preds))
 print("Recall:", recall_score(y_test, preds))

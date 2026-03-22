@@ -5,7 +5,7 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_sc
 
 DATA_PATH = "data_big.npz"
 MODEL_PATH = "model_big.pt"
-THRESH = 0.7
+THRESH = 0.5
 
 data = np.load(DATA_PATH)
 
@@ -20,7 +20,7 @@ class Model(nn.Module):
 
     def forward(self, x):
         _, (h, _) = self.lstm(x)
-        return torch.sigmoid(self.fc(h[-1])).squeeze()
+        return self.fc(h[-1]).squeeze()
 
 model = Model()
 model.load_state_dict(torch.load(MODEL_PATH))
